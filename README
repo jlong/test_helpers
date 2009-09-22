@@ -2,7 +2,7 @@ Test Helpers for Rails
 ======================
 
 This plugin adds a couple of class methods to Test::Unit::TestCase to make it 
-easy to use share helper methods between test cases in modules.
+easy to share helper methods between test cases in modules.
 
 A typical Rails project has the following test directory structure:
 
