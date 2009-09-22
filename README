@@ -1,0 +1,68 @@
+Test Helpers for Rails
+======================
+
+This plugin adds a couple of class methods to Test::Unit::TestCase to make it 
+easy to use share helper methods between test cases in modules.
+
+A typical Rails project has the following test directory structure:
+
+  test/         # the root test directory
+    fixtures/   # fixtures used while testing
+    functional/ # functional tests
+    unit/       # unit tests
+
+The test_helpers Rails plugin adds an additional directory:
+
+  test/
+    helpers/
+
+Drop modules in the "test/helpers" that contain code that you would like to 
+share between test cases. For example. Suppose you created a couple of custom 
+assertions that you would like to use in your test cases. You could create a 
+custom module (MyAssertionsTestHelper) and drop it in the "test/helpers" 
+directory like this:
+
+  module MyAssertionsTestHelper
+
+    def assert_this(expected, result)
+      # implementation
+    end
+
+    def assert_that(expected, result)
+      # impementation
+    end
+
+  end
+
+Be sure that both the module name and filename end with "TestHelper" (so for 
+the module above the filename should be "my_assertions_test_helper.rb").
+
+Now, in a test case where you would like to use the test helper simply invoke 
+the "test_helper" class method:
+
+  class MyTest < Test::Unit::TestCase
+
+    test_helper :my_assertions
+
+    def test_custom_assertion
+      assert_this(123, 456)
+      assert_that("abc", "def")
+    end
+  
+  end
+
+The "test_helper" class method takes an array of symbols and automatically 
+loads and includes the appropriate modules. In the example above it examines 
+the :my_assertions symbol and concludes that you want to require 
+"test/helper/my_assertions_test_helper" and include MyAssertionsTestHelper 
+into your test case.
+
+If you would like to modify the test helper load path you can do so with the 
+"test_helper_paths" class method:
+
+  class Test::Unit::TestCase
+    self.test_helper_paths << '/custom/helper/path'
+  end
+
+The test helper plugin is Copyright (c) John W. Long, 2007 and is available 
+under the same license as Rails.
